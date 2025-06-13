@@ -28,9 +28,6 @@ if menu == "Optimisasi Produksi (LP)":
     st.header("🔧 Optimisasi Produksi (Linear Programming)")
     st.write("Masukkan data untuk menyelesaikan persoalan LP...")
 
-    st.info("Contoh ini belum lengkap. Silakan lengkapi dengan model LP dari kode kamu.")
-    # Jika sudah ada LP modelmu, tinggal tempel di sini
-
 # --- Model 2: EOQ
 elif menu == "Model Persediaan (EOQ)":
     st.header("📦 Model Persediaan EOQ")
