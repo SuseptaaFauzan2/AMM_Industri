@@ -94,10 +94,6 @@ elif menu == "Model Persediaan (EOQ)":
         ax.legend()
         st.pyplot(fig)
 
-        buf = io.BytesIO()
-        fig.savefig(buf, format="png")
-        buf.seek(0)
-        st.image(buf, caption="📈 Grafik EOQ sebagai Gambar")
     else:
         st.error("Biaya penyimpanan harus lebih dari 0.")
 
@@ -128,11 +124,6 @@ elif menu == "Model Antrian (M/M/1)":
         ax.legend()
         st.pyplot(fig)
 
-        buf = io.BytesIO()
-        fig.savefig(buf, format="png")
-        buf.seek(0)
-        st.image(buf, caption="📉 Grafik Antrian M/M/1 sebagai Gambar")
-
 # ===== Model 4: Break Even Point =====
 elif menu == "Break Even Point (BEP)":
     st.header("🏭 Break Even Point (BEP)")
@@ -159,10 +150,6 @@ elif menu == "Break Even Point (BEP)":
         ax.grid(True)
         st.pyplot(fig)
 
-        buf = io.BytesIO()
-        fig.savefig(buf, format="png")
-        buf.seek(0)
-        st.image(buf, caption="💹 Grafik Break Even Point sebagai Gambar")
     else:
         st.error("Harga jual harus lebih besar dari biaya variabel.")
 
