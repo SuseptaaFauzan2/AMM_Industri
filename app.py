@@ -4,10 +4,12 @@ import math
 import io
 from pulp import LpProblem, LpMaximize, LpVariable, LpInteger, LpStatus, value
 
-st.title("📊 Aplikasi Model Matematika Industri")
+st.set_page_config(page_title="Model Matematika Industri", layout="wide")
+
+st.title("\U0001F4CA Aplikasi Model Matematika Industri")
 
 # ===== Sidebar: Dokumentasi =====
-st.sidebar.markdown("## 📘 Instruksi Penggunaan")
+st.sidebar.markdown("## \U0001F4D8 Instruksi Penggunaan")
 st.sidebar.write("""
 Selamat datang di aplikasi model matematika industri.
 
@@ -25,8 +27,8 @@ menu = st.sidebar.selectbox(
 
 # ===== Model 1: Linear Programming =====
 if menu == "Optimisasi Produksi (LP)":
-    st.header("🔧 Optimisasi Produksi (Linear Programming)")
-    st.subheader("📖 Studi Kasus: Produksi Makanan Kaleng")
+    st.header("\U0001F527 Optimisasi Produksi (Linear Programming)")
+    st.subheader("\U0001F4D6 Studi Kasus: Produksi Makanan Kaleng")
 
     profit_A = st.number_input("Laba per Unit Produk A", value=30.0)
     resource1_A = st.number_input("Mesin per Unit Produk A", value=2.0)
@@ -53,28 +55,32 @@ if menu == "Optimisasi Produksi (LP)":
             st.write(f"Jumlah Produk B: {x_B.varValue:.0f} unit")
 
             fig, ax = plt.subplots()
-            if resource1_B != 0:
-                x_vals = [0, limit_resource1 / resource1_A]
-                y_vals1 = [(limit_resource1 - resource1_A * x) / resource1_B for x in x_vals]
-                ax.plot(x_vals, y_vals1, label='Kapasitas Mesin', linestyle='--')
-            if resource2_B != 0:
-                x_vals = [0, limit_resource2 / resource2_A]
-                y_vals2 = [(limit_resource2 - resource2_A * x) / resource2_B for x in x_vals]
-                ax.plot(x_vals, y_vals2, label='Kapasitas Tenaga Kerja', linestyle='--')
+            x_vals = [0, limit_resource1 / resource1_A]
+            y_vals1 = [(limit_resource1 - resource1_A * x) / resource1_B for x in x_vals]
+            ax.plot(x_vals, y_vals1, label='Kapasitas Mesin', linestyle='--')
+
+            x_vals = [0, limit_resource2 / resource2_A]
+            y_vals2 = [(limit_resource2 - resource2_A * x) / resource2_B for x in x_vals]
+            ax.plot(x_vals, y_vals2, label='Kapasitas Tenaga Kerja', linestyle='--')
+
             ax.plot(x_A.varValue, x_B.varValue, 'ro', label='Titik Optimal')
             ax.set_xlabel("Produk A")
             ax.set_ylabel("Produk B")
             ax.set_title("Area Feasible dan Titik Optimal")
             ax.legend()
             ax.grid(True)
-            st.pyplot(fig)
+
+            buf = io.BytesIO()
+            fig.savefig(buf, format="png")
+            buf.seek(0)
+            st.image(buf, caption="\U0001F4CA Grafik Optimisasi Produksi")
         else:
             st.error("Tidak ada solusi optimal.")
 
 # ===== Model 2: EOQ =====
 elif menu == "Model Persediaan (EOQ)":
-    st.header("📦 Model Persediaan EOQ")
-    st.subheader("📖 Studi Kasus: Pengadaan Bahan Baku Pabrik")
+    st.header("\U0001F4E6 Model Persediaan EOQ")
+    st.subheader("\U0001F4D6 Studi Kasus: Pengadaan Bahan Baku Pabrik")
 
     D = st.number_input("Permintaan Tahunan (D)", value=1200.0)
     S = st.number_input("Biaya Pemesanan per Order (S)", value=50000.0)
@@ -83,8 +89,10 @@ elif menu == "Model Persediaan (EOQ)":
     if H > 0:
         EOQ = math.sqrt((2 * D * S) / H)
         st.success(f"EOQ: {EOQ:.2f} unit per order")
+
         Q_range = list(range(1, int(EOQ*2), max(1, int(EOQ*0.1))))
         total_cost = [(D/q)*S + (q/2)*H for q in Q_range]
+
         fig, ax = plt.subplots()
         ax.plot(Q_range, total_cost, label="Total Cost")
         ax.axvline(EOQ, color='r', linestyle='--', label="EOQ")
@@ -92,15 +100,19 @@ elif menu == "Model Persediaan (EOQ)":
         ax.set_ylabel("Total Cost")
         ax.set_title("Grafik EOQ vs Biaya Total")
         ax.legend()
-        st.pyplot(fig)
+        ax.grid(True)
 
+        buf = io.BytesIO()
+        fig.savefig(buf, format="png")
+        buf.seek(0)
+        st.image(buf, caption="\U0001F4CA Grafik EOQ")
     else:
         st.error("Biaya penyimpanan harus lebih dari 0.")
 
 # ===== Model 3: Antrian M/M/1 =====
 elif menu == "Model Antrian (M/M/1)":
-    st.header("⏳ Model Antrian M/M/1")
-    st.subheader("📖 Studi Kasus: Antrian Pemeriksaan Kualitas Produk")
+    st.header("\u23F3 Model Antrian M/M/1")
+    st.subheader("\U0001F4D6 Studi Kasus: Antrian Pemeriksaan Kualitas Produk")
 
     lam = st.number_input("Laju Kedatangan Produk (λ)", value=4.0)
     mu = st.number_input("Laju Pemeriksaan (μ)", value=6.0)
@@ -115,6 +127,7 @@ elif menu == "Model Antrian (M/M/1)":
 
         lam_vals = [x * 0.1 for x in range(1, int(mu * 10)) if x * 0.1 < mu]
         W_vals = [1 / (mu - l) for l in lam_vals]
+
         fig, ax = plt.subplots()
         ax.plot(lam_vals, W_vals, label="Waktu Tunggu (W)")
         ax.set_xlabel("Laju Kedatangan (λ)")
@@ -122,12 +135,16 @@ elif menu == "Model Antrian (M/M/1)":
         ax.set_title("Pengaruh λ terhadap W")
         ax.grid(True)
         ax.legend()
-        st.pyplot(fig)
+
+        buf = io.BytesIO()
+        fig.savefig(buf, format="png")
+        buf.seek(0)
+        st.image(buf, caption="\U0001F4CA Grafik Model Antrian")
 
 # ===== Model 4: Break Even Point =====
 elif menu == "Break Even Point (BEP)":
-    st.header("🏭 Break Even Point (BEP)")
-    st.subheader("📖 Studi Kasus: Produksi Minuman Botol")
+    st.header("\U0001F3ED Break Even Point (BEP)")
+    st.subheader("\U0001F4D6 Studi Kasus: Produksi Minuman Botol")
 
     FC = st.number_input("Biaya Tetap (FC)", value=10000000.0)
     VC = st.number_input("Biaya Variabel per Unit (VC)", value=8000.0)
@@ -136,9 +153,11 @@ elif menu == "Break Even Point (BEP)":
     if P > VC:
         BEQ = FC / (P - VC)
         st.success(f"Break Even Quantity (BEP): {BEQ:.0f} unit")
+
         Q = list(range(0, int(BEQ*2), max(1, int(BEQ*0.1))))
         TR = [P * q for q in Q]
         TC = [FC + VC * q for q in Q]
+
         fig, ax = plt.subplots()
         ax.plot(Q, TR, label="Total Revenue")
         ax.plot(Q, TC, label="Total Cost")
@@ -148,11 +167,14 @@ elif menu == "Break Even Point (BEP)":
         ax.set_title("Break Even Point")
         ax.legend()
         ax.grid(True)
-        st.pyplot(fig)
 
+        buf = io.BytesIO()
+        fig.savefig(buf, format="png")
+        buf.seek(0)
+        st.image(buf, caption="\U0001F4CA Grafik Break Even Point")
     else:
         st.error("Harga jual harus lebih besar dari biaya variabel.")
 
 # ===== Footer =====
 st.markdown("---")
-st.markdown("📌 Dibuat oleh Kelompok 4 - 2025")
+st.markdown("\U0001F4CC Dibuat oleh Kelompok 4 - 2025")
