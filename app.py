@@ -1,6 +1,7 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 import math
+import io
 from pulp import LpProblem, LpMaximize, LpVariable, LpInteger, LpStatus, value
 
 st.title("📊 Aplikasi Model Matematika Industri")
@@ -26,12 +27,6 @@ menu = st.sidebar.selectbox(
 if menu == "Optimisasi Produksi (LP)":
     st.header("🔧 Optimisasi Produksi (Linear Programming)")
     st.subheader("📖 Studi Kasus: Produksi Makanan Kaleng")
-    st.write("""
-Sebuah pabrik makanan ingin memproduksi dua jenis produk: *Produk A (sarden)* dan *Produk B (kornet)*. 
-Masing-masing produk memberikan laba berbeda dan memerlukan dua jenis sumber daya utama: mesin dan tenaga kerja.
-Manajemen ingin mengetahui berapa banyak produk yang harus dibuat untuk *memaksimalkan laba*, 
-dengan tetap mematuhi batas ketersediaan sumber daya yang ada.
-""")
 
     profit_A = st.number_input("Laba per Unit Produk A", value=30.0)
     resource1_A = st.number_input("Mesin per Unit Produk A", value=2.0)
@@ -80,10 +75,6 @@ dengan tetap mematuhi batas ketersediaan sumber daya yang ada.
 elif menu == "Model Persediaan (EOQ)":
     st.header("📦 Model Persediaan EOQ")
     st.subheader("📖 Studi Kasus: Pengadaan Bahan Baku Pabrik")
-    st.write("""
-Sebuah pabrik secara rutin memesan bahan baku dari pemasok. Manajemen ingin mengetahui berapa banyak bahan baku yang harus dipesan 
-dalam satu kali order agar *biaya total pemesanan dan penyimpanan minimal*.
-""")
 
     D = st.number_input("Permintaan Tahunan (D)", value=1200.0)
     S = st.number_input("Biaya Pemesanan per Order (S)", value=50000.0)
@@ -102,6 +93,11 @@ dalam satu kali order agar *biaya total pemesanan dan penyimpanan minimal*.
         ax.set_title("Grafik EOQ vs Biaya Total")
         ax.legend()
         st.pyplot(fig)
+
+        buf = io.BytesIO()
+        fig.savefig(buf, format="png")
+        buf.seek(0)
+        st.image(buf, caption="📈 Grafik EOQ sebagai Gambar")
     else:
         st.error("Biaya penyimpanan harus lebih dari 0.")
 
@@ -109,10 +105,6 @@ dalam satu kali order agar *biaya total pemesanan dan penyimpanan minimal*.
 elif menu == "Model Antrian (M/M/1)":
     st.header("⏳ Model Antrian M/M/1")
     st.subheader("📖 Studi Kasus: Antrian Pemeriksaan Kualitas Produk")
-    st.write("""
-Dalam lini produksi, setiap produk harus melewati proses pemeriksaan kualitas (Quality Control). 
-Staf QC hanya satu orang dan mampu memeriksa sejumlah produk per jam. Manajemen ingin mengetahui waktu tunggu dan jumlah produk yang mengantri.
-""")
 
     lam = st.number_input("Laju Kedatangan Produk (λ)", value=4.0)
     mu = st.number_input("Laju Pemeriksaan (μ)", value=6.0)
@@ -136,14 +128,15 @@ Staf QC hanya satu orang dan mampu memeriksa sejumlah produk per jam. Manajemen 
         ax.legend()
         st.pyplot(fig)
 
+        buf = io.BytesIO()
+        fig.savefig(buf, format="png")
+        buf.seek(0)
+        st.image(buf, caption="📉 Grafik Antrian M/M/1 sebagai Gambar")
+
 # ===== Model 4: Break Even Point =====
 elif menu == "Break Even Point (BEP)":
     st.header("🏭 Break Even Point (BEP)")
     st.subheader("📖 Studi Kasus: Produksi Minuman Botol")
-    st.write("""
-Sebuah pabrik minuman ingin mengetahui berapa unit produk yang harus dijual agar menutupi semua biaya (balik modal).
-Diketahui biaya tetap, biaya variabel per unit, dan harga jual.
-""")
 
     FC = st.number_input("Biaya Tetap (FC)", value=10000000.0)
     VC = st.number_input("Biaya Variabel per Unit (VC)", value=8000.0)
@@ -165,6 +158,11 @@ Diketahui biaya tetap, biaya variabel per unit, dan harga jual.
         ax.legend()
         ax.grid(True)
         st.pyplot(fig)
+
+        buf = io.BytesIO()
+        fig.savefig(buf, format="png")
+        buf.seek(0)
+        st.image(buf, caption="💹 Grafik Break Even Point sebagai Gambar")
     else:
         st.error("Harga jual harus lebih besar dari biaya variabel.")
 
