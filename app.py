@@ -1,11 +1,9 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 import math
-import io
 from pulp import LpProblem, LpMaximize, LpVariable, LpInteger, LpStatus, value
 
 st.set_page_config(page_title="Model Matematika Industri", layout="wide")
-
 st.title("\U0001F4CA Aplikasi Model Matematika Industri")
 
 # ===== Sidebar: Dokumentasi =====
@@ -70,10 +68,7 @@ if menu == "Optimisasi Produksi (LP)":
             ax.legend()
             ax.grid(True)
 
-            buf = io.BytesIO()
-            fig.savefig(buf, format="png")
-            buf.seek(0)
-            st.image(buf, caption="\U0001F4CA Grafik Optimisasi Produksi")
+            st.pyplot(fig)
         else:
             st.error("Tidak ada solusi optimal.")
 
@@ -102,10 +97,7 @@ elif menu == "Model Persediaan (EOQ)":
         ax.legend()
         ax.grid(True)
 
-        buf = io.BytesIO()
-        fig.savefig(buf, format="png")
-        buf.seek(0)
-        st.image(buf, caption="\U0001F4CA Grafik EOQ")
+        st.pyplot(fig)
     else:
         st.error("Biaya penyimpanan harus lebih dari 0.")
 
@@ -136,10 +128,7 @@ elif menu == "Model Antrian (M/M/1)":
         ax.grid(True)
         ax.legend()
 
-        buf = io.BytesIO()
-        fig.savefig(buf, format="png")
-        buf.seek(0)
-        st.image(buf, caption="\U0001F4CA Grafik Model Antrian")
+        st.pyplot(fig)
 
 # ===== Model 4: Break Even Point =====
 elif menu == "Break Even Point (BEP)":
@@ -168,10 +157,7 @@ elif menu == "Break Even Point (BEP)":
         ax.legend()
         ax.grid(True)
 
-        buf = io.BytesIO()
-        fig.savefig(buf, format="png")
-        buf.seek(0)
-        st.image(buf, caption="\U0001F4CA Grafik Break Even Point")
+        st.pyplot(fig)
     else:
         st.error("Harga jual harus lebih besar dari biaya variabel.")
 
